@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import {register, login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -28,26 +28,44 @@ const mutations = {
 }
 
 const actions = {
-  // user login
-  login({ commit }, userInfo) {
-    const { username, password } = userInfo
-    return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+  async register({commit},userinfo){
+    const data = await register(userinfo).catch(err=>{
+      console.log('注册失败！！！',err)
+      return Promise.reject(new Error('error'))
     })
+    return 'ok'
+
+  },
+  // user login
+  async login({ commit }, userInfo) {
+    const { username, password } = userInfo
+    const data = await login({ username: username.trim(), password: password }).catch(error=>{
+      // console.log('eeeeeeeeeeeeeeeee')
+      return Promise.reject(new Error('error'))
+    })
+
+    commit('SET_TOKEN', data.token)
+    setToken(data.token)
+    return 'ok'
+    // return new Promise((resolve, reject) => {
+    //   login({ username: username.trim(), password: password }).then(response => {
+    //     const { data } = response
+    //     commit('SET_TOKEN', data.token)
+    //     setToken(data.token)
+    //     console.log('jjj')
+    //     resolve()
+    //   }).catch(error => {
+    //     console.log('jjjjjjjjjjjj')
+    //     reject(error)
+    //   })
+    // })
   },
 
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
+      getInfo().then(response => {
+        const data = response
 
         if (!data) {
           return reject('Verification failed, please Login again.')
