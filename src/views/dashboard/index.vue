@@ -1,8 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
-    333333444444
-    222222222222
+    2333
     <el-button type="primary" @click="btn">点击发送请求</el-button>
   </div>
 </template>
