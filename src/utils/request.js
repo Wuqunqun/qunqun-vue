@@ -72,11 +72,13 @@ service.interceptors.response.use(
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
       // console.log('5454545')
-      Message({
-        message:res.message,
-        type:'success',
-        duration: 5 * 1000
-      })
+      if(res.message){
+        Message({
+          message:res.message,
+          type:'success',
+          duration: 5 * 1000
+        })
+      }
       return res
     }
   },
